@@ -56,7 +56,7 @@ function assert-exists() {
     if [ -e "$2" ]; then
         report-success "$1"
     else
-        report-failure "$@"
+        report-failure assert-exists "$@"
     fi
 }
 # ~\~ end
@@ -65,7 +65,7 @@ function assert-not-exists() {
     if [ ! -e "$2" ]; then
         report-success "$1"
     else
-        report-failure "$@"
+        report-failure assert-not-exists "$@"
     fi
 }
 # ~\~ end

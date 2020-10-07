@@ -318,10 +318,44 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="reporting-12"><a href="#reporting-12"></a><span class="kw">}</span></span></code></pre></div>
 </div>
 <h1 id="assertions">Assertions</h1>
+<div class="annotated-code">
+<p><span><em>«repl»=</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="op">&lt;&lt;reporting&gt;&gt;</span></span>
+<span id="repl-2"><a href="#repl-2"></a>&lt;&lt;assertions<span class="op">&gt;&gt;</span></span></code></pre></div>
+</div>
 <p>The first argument of an assertion is always the human-readable description. The following assertions are defined.</p>
 <h2 id="string-equality">String equality</h2>
 <p>Test if two strings are equal.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">assert-streq</span> <span class="st">&quot;6 * 7 == 42&quot;</span> <span class="va">$(</span><span class="bu">echo</span> <span class="st">&quot;6 * 7&quot;</span> <span class="kw">|</span> <span class="fu">bc</span><span class="va">)</span> <span class="st">&quot;42&quot;</span></span></code></pre></div>
+<div class="doctest" data-status="SUCCESS">
+<div class="doctestInput">
+<div class="annotated-code">
+<p><span><em>«repl»+</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash eval"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="ex">assert-streq</span> <span class="st">&quot;6 * 7 == 42&quot;</span> <span class="va">$(</span><span class="bu">echo</span> <span class="st">&quot;6 * 7&quot;</span> <span class="kw">|</span> <span class="fu">bc</span><span class="va">)</span> <span class="st">&quot;42&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div class="doctestResult">
+<div class="programOutput">
+<pre class="ansi2html-content"><span style="color: #00aa00">✓</span>  6 * 7 == 42
+</pre>
+</div>
+</div>
+</div>
+<div class="doctest" data-status="SUCCESS">
+<div class="doctestInput">
+<div class="annotated-code">
+<p><span><em>«repl»+</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash eval"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="ex">assert-streq</span> <span class="st">&quot;Time is an illusion&quot;</span> <span class="st">&quot;Thursday&quot;</span> <span class="st">&quot;Friday&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div class="doctestResult">
+<div class="programOutput">
+<pre class="ansi2html-content"><span style="color: #aa0000">✗</span>  Time is an illusion, <span style="font-weight: bold">assert-streq</span> args:
+    - "Thursday"
+    - "Friday"
+</pre>
+</div>
+</div>
+</div>
 <p>Implementation:</p>
 <div class="annotated-code">
 <p><span><em>«assertions»=</em></span></p>
@@ -335,8 +369,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <h2 id="array-equality">Array equality</h2>
 <p>Tests wether the arrays in arguments <code>$2</code> and <code>$3</code> are equal by string comparison, for example when listing expected files. Do make sure to use <code>sort</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">assert-arrayeq</span> <span class="st">&quot;Source contains expected files&quot;</span> \</span>
-<span id="cb3-2"><a href="#cb3-2"></a>    <span class="st">&quot;</span><span class="va">$(</span><span class="ex">entangled</span> list <span class="kw">|</span> <span class="fu">sort</span><span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;factorial.scm hello.scm&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">assert-arrayeq</span> <span class="st">&quot;Source contains expected files&quot;</span> \</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="st">&quot;</span><span class="va">$(</span><span class="ex">entangled</span> list <span class="kw">|</span> <span class="fu">sort</span><span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;factorial.scm hello.scm&quot;</span></span></code></pre></div>
 <p>Implementation:</p>
 <div class="annotated-code">
 <p><span><em>«assertions»+</em></span></p>
@@ -355,10 +389,27 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <h2 id="file-existence">File existence</h2>
 <p>Tests wether a given file exists.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">touch</span> hello.txt</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="ex">assert-exists</span> <span class="st">&quot;hello.txt was created&quot;</span> hello.txt</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">rm</span> hello.txt</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="ex">assert-not-exists</span> <span class="st">&quot;hello.txt was destroyed&quot;</span> hello.txt</span></code></pre></div>
+<div class="doctest" data-status="SUCCESS">
+<div class="doctestInput">
+<div class="annotated-code">
+<p><span><em>«repl»+</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash eval"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="ex">assert-exists</span> <span class="st">&quot;hello.txt exists&quot;</span> hello.txt</span>
+<span id="repl-2"><a href="#repl-2"></a><span class="fu">touch</span> hello.txt</span>
+<span id="repl-3"><a href="#repl-3"></a><span class="ex">assert-exists</span> <span class="st">&quot;hello.txt was created&quot;</span> hello.txt</span>
+<span id="repl-4"><a href="#repl-4"></a><span class="fu">rm</span> hello.txt</span>
+<span id="repl-5"><a href="#repl-5"></a><span class="ex">assert-not-exists</span> <span class="st">&quot;hello.txt was destroyed&quot;</span> hello.txt</span></code></pre></div>
+</div>
+</div>
+<div class="doctestResult">
+<div class="programOutput">
+<pre class="ansi2html-content"><span style="color: #aa0000">✗</span>  hello.txt exists, <span style="font-weight: bold">assert-exists</span> args:
+    - "hello.txt"
+<span style="color: #00aa00">✓</span>  hello.txt was created
+<span style="color: #00aa00">✓</span>  hello.txt was destroyed
+</pre>
+</div>
+</div>
+</div>
 <p>Implementation:</p>
 <div class="annotated-code">
 <p><span><em>«assertions»+</em></span></p>
@@ -366,7 +417,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="ot">-e</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
 <span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
 <span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
-<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> assert-exists <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
 <span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
 <span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
 </div>
@@ -377,14 +428,28 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="ot">!</span> <span class="ot">-e</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
 <span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
 <span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
-<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> assert-not-exists <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
 <span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
 <span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
 </div>
 <h2 id="command-success">Command success</h2>
 <p>To test wether the previous command returned success by calling these functions with <code>$?</code> argument.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">which</span> entangled</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="ex">assert-return-success</span> <span class="st">&quot;Entangled executable found&quot;</span> <span class="va">$?</span></span></code></pre></div>
+<div class="doctest" data-status="SUCCESS">
+<div class="doctestInput">
+<div class="annotated-code">
+<p><span><em>«repl»+</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash eval"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="fu">which</span> entangled</span>
+<span id="repl-2"><a href="#repl-2"></a><span class="ex">assert-return-success</span> <span class="st">&quot;Entangled executable found&quot;</span> <span class="va">$?</span></span></code></pre></div>
+</div>
+</div>
+<div class="doctestResult">
+<div class="programOutput">
+<pre class="ansi2html-content">~/.local/bin/entangled
+<span style="color: #00aa00">✓</span>  Entangled executable found
+</pre>
+</div>
+</div>
+</div>
 <p>The <code>assert-return-fail</code> function succeeds if the command failed (exit code other than 0).</p>
 <div class="annotated-code">
 <p><span><em>«assertions»+</em></span></p>

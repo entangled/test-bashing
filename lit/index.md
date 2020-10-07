@@ -227,13 +227,23 @@ function report-failure() {
 ```
 
 # Assertions
+
+``` {.bash #repl}
+<<reporting>>
+<<assertions>>
+```
+
 The first argument of an assertion is always the human-readable description. The following assertions are defined.
 
 ## String equality
 Test if two strings are equal.
 
-``` {.bash}
+``` {.bash .eval #repl}
 assert-streq "6 * 7 == 42" $(echo "6 * 7" | bc) "42"
+```
+
+``` {.bash .eval #repl}
+assert-streq "Time is an illusion" "Thursday" "Friday"
 ```
 
 Implementation:
@@ -276,7 +286,8 @@ function assert-arrayeq() {
 ## File existence
 Tests wether a given file exists.
 
-``` {.bash}
+``` {.bash #repl .eval}
+assert-exists "hello.txt exists" hello.txt
 touch hello.txt
 assert-exists "hello.txt was created" hello.txt
 rm hello.txt
@@ -290,7 +301,7 @@ function assert-exists() {
     if [ -e "$2" ]; then
         report-success "$1"
     else
-        report-failure "$@"
+        report-failure assert-exists "$@"
     fi
 }
 ```
@@ -302,7 +313,7 @@ function assert-not-exists() {
     if [ ! -e "$2" ]; then
         report-success "$1"
     else
-        report-failure "$@"
+        report-failure assert-not-exists "$@"
     fi
 }
 ```
@@ -310,7 +321,7 @@ function assert-not-exists() {
 ## Command success
 To test wether the previous command returned success by calling these functions with `$?` argument.
 
-``` {.bash}
+``` {.bash #repl .eval}
 which entangled
 assert-return-success "Entangled executable found" $?
 ```
