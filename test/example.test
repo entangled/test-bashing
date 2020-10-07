@@ -1,0 +1,12 @@
+# ~\~ language=Bash filename=test/example.test
+# ~\~ begin <<lit/index.md|test/example.test>>[0]
+assert-streq "running on Linux?" "$(uname -o)" "Linux"
+assert-not-exists "hello.txt does not exist" hello.txt
+
+cat > hello.txt <<EOF
+Hello, World!
+EOF
+
+assert-exists "hello.txt is created" hello.txt
+assert-streq "hello.txt content" "$(cat hello.txt)" "Hello, World!"
+# ~\~ end

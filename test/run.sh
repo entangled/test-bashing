@@ -45,7 +45,7 @@ function assert-arrayeq() {
     for (( i=0; i<${n}; i++)); do
         if [ ! "${a1[$i]}" = "${a2[$i]}" ]; then
             report-failure assert-arrayeq "$@"
-            break
+            return
         fi
     done
     report-success "$1"
@@ -114,7 +114,7 @@ function run-test() {
      if [ -z ${no_setup} ]; then
          setup
      fi
-     
+
      source "$(basename $1 .test).test"
 
      if [ -z ${no_setup} ]; then
@@ -136,7 +136,7 @@ function show_help() {
     echo "    -v           verbose entangled"
     echo
     echo "Available units:"
-    for t in *.test; do
+    for t in ${DIR}/*.test; do
             echo "    - $(basename ${t} .test)"
     done
 }

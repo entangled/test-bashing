@@ -123,7 +123,70 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>Testing in Haskell is usually done using <code>Hspec</code> together with <code>QuickCheck</code>. <code>Hspec</code> manages the overall testing architechture, while <code>QuickCheck</code> lets you do property testing. This all works very well with functional code, but we’re in the realm of shell scripting here: setting up an environment, do mutations, check for sanity. Somehow the prospect of coding all this up in Haskell does not sound enticing.</p>
 <p>Python would be a nice hybrid. It has unit-testing libraries available, and all the power of a generic language. In the end however, what I want to do is, have a markdown file, emulate it being written to using <code>patch</code>, check if entangled shows the correct behaviour. The tests should look like a user typing in commands, working in the editor. I ended up coding this in Bash; a decision I may come to regret, but until that time, here’s how it works.</p>
+<p>The idea is to have a set of tests each in a Bash script with the <code>.test</code> extension.</p>
+<div class="annotated-code">
+<p><span><em>«test/example.test»=</em></span></p>
+<div class="sourceCode" id="cb1" data-file="test/example.test"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">assert-streq</span> <span class="st">&quot;running on Linux?&quot;</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">uname</span> -o<span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;Linux&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">assert-not-exists</span> <span class="st">&quot;hello.txt does not exist&quot;</span> hello.txt</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">cat</span> <span class="op">&gt;</span> hello.txt <span class="op">&lt;&lt;EOF</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>Hello, World!</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="op">EOF</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="ex">assert-exists</span> <span class="st">&quot;hello.txt is created&quot;</span> hello.txt</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="ex">assert-streq</span> <span class="st">&quot;hello.txt content&quot;</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">cat</span> hello.txt<span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;Hello, World!&quot;</span></span></code></pre></div>
+</div>
+<p>Running the script (here with <code>|| true</code> to prevent Jupyter from balking):</p>
+<div class="doctest" data-status="SUCCESS">
+<div class="doctestInput">
+<div class="annotated-code">
+<p><span><em>«repl»=</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash eval"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="fu">bash</span> test/run.sh <span class="kw">||</span> <span class="fu">true</span></span></code></pre></div>
+</div>
+</div>
+<div class="doctestResult">
+<div class="programOutput">
+<pre class="ansi2html-content"><span style="color: #aa5500"> ~~~</span> <span style="font-weight: bold">example</span> <span style="color: #aa5500">~~~</span>
+Setting up in /tmp/tmp.eB4F51sedF ...
+<span style="color: #aa0000">✗</span>  running on Linux?, <span style="font-weight: bold">assert-streq</span> args:
+    - "GNU/Linux"
+    - "Linux"
+<span style="color: #00aa00">✓</span>  hello.txt does not exist
+<span style="color: #00aa00">✓</span>  hello.txt is created
+<span style="color: #00aa00">✓</span>  hello.txt content
+Cleaning up ...
+
+</pre>
+</div>
+</div>
+</div>
 <h1 id="command-line-interface-in-bash">Command line interface in Bash</h1>
+<p>The main script has the following interface.</p>
+<div class="doctest" data-status="SUCCESS">
+<div class="doctestInput">
+<div class="annotated-code">
+<p><span><em>«repl»+</em></span></p>
+<div class="sourceCode" id="repl"><pre class="sourceCode bash eval"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="fu">bash</span> test/run.sh -h</span></code></pre></div>
+</div>
+</div>
+<div class="doctestResult">
+<div class="programOutput">
+<pre class="ansi2html-content">usage: test/run.sh [args]
+
+where [args] can be one of:
+    -h           help: show this help
+    -d           debug: run here instead of /tmp
+    -x           break on first failure
+    -u &lt;unit&gt;    only run unit
+    -c           clean after local run (with -d)
+    -v           verbose entangled
+
+Available units:
+    - example
+</pre>
+</div>
+</div>
+</div>
 <p>Command line parsing in Bash is actually quite nice.</p>
 <div class="annotated-code">
 <p><span><em>«parse-command-line»=</em></span></p>
@@ -193,7 +256,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="show-help-10"><a href="#show-help-10"></a>    <span class="bu">echo</span> <span class="st">&quot;    -v           verbose entangled&quot;</span></span>
 <span id="show-help-11"><a href="#show-help-11"></a>    <span class="bu">echo</span></span>
 <span id="show-help-12"><a href="#show-help-12"></a>    <span class="bu">echo</span> <span class="st">&quot;Available units:&quot;</span></span>
-<span id="show-help-13"><a href="#show-help-13"></a>    <span class="kw">for</span> <span class="ex">t</span> in *.test<span class="kw">;</span> <span class="kw">do</span></span>
+<span id="show-help-13"><a href="#show-help-13"></a>    <span class="kw">for</span> <span class="ex">t</span> in <span class="va">${DIR}</span>/*.test<span class="kw">;</span> <span class="kw">do</span></span>
 <span id="show-help-14"><a href="#show-help-14"></a>            <span class="bu">echo</span> <span class="st">&quot;    - </span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${t}</span> .test<span class="va">)</span><span class="st">&quot;</span></span>
 <span id="show-help-15"><a href="#show-help-15"></a>    <span class="kw">done</span></span>
 <span id="show-help-16"><a href="#show-help-16"></a><span class="kw">}</span></span></code></pre></div>
@@ -207,7 +270,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="run-test-3"><a href="#run-test-3"></a>     <span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="va">${no_setup}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
 <span id="run-test-4"><a href="#run-test-4"></a>         <span class="ex">setup</span></span>
 <span id="run-test-5"><a href="#run-test-5"></a>     <span class="kw">fi</span></span>
-<span id="run-test-6"><a href="#run-test-6"></a>     </span>
+<span id="run-test-6"><a href="#run-test-6"></a></span>
 <span id="run-test-7"><a href="#run-test-7"></a>     <span class="bu">source</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$1</span> .test<span class="va">)</span><span class="st">.test&quot;</span></span>
 <span id="run-test-8"><a href="#run-test-8"></a></span>
 <span id="run-test-9"><a href="#run-test-9"></a>     <span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="va">${no_setup}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
@@ -264,34 +327,34 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="annotated-code">
 <p><span><em>«test/run.sh»=</em></span></p>
-<div class="sourceCode" id="cb1" data-file="test/run.sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># taste environment</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="op">&lt;&lt;get-script-dir&gt;&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>&lt;&lt;define-exit-code<span class="op">&gt;&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a># function definitions</span>
-<span id="cb1-6"><a href="#cb1-6"></a>&lt;&lt;reporting<span class="op">&gt;&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>&lt;&lt;assertions<span class="op">&gt;&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>&lt;&lt;setup<span class="op">&gt;&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>&lt;&lt;teardown<span class="op">&gt;&gt;</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>&lt;&lt;run-test<span class="op">&gt;&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a>&lt;&lt;show-help<span class="op">&gt;&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a></span>
-<span id="cb1-13"><a href="#cb1-13"></a># main script</span>
-<span id="cb1-14"><a href="#cb1-14"></a>&lt;&lt;parse-command-line<span class="op">&gt;&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a>if [ -z <span class="va">${test_only}</span> ]; then</span>
-<span id="cb1-17"><a href="#cb1-17"></a>    for unit in &quot;<span class="va">${DIR}</span>&quot;/*.test; do</span>
-<span id="cb1-18"><a href="#cb1-18"></a>        run-test &quot;<span class="va">${unit}</span>&quot;</span>
-<span id="cb1-19"><a href="#cb1-19"></a>    done</span>
-<span id="cb1-20"><a href="#cb1-20"></a>else</span>
-<span id="cb1-21"><a href="#cb1-21"></a>    if [ -f &quot;<span class="va">${test_only}</span>.test&quot; ]; then</span>
-<span id="cb1-22"><a href="#cb1-22"></a>        run-test &quot;<span class="va">${test_only}</span>&quot;</span>
-<span id="cb1-23"><a href="#cb1-23"></a>    else</span>
-<span id="cb1-24"><a href="#cb1-24"></a>        echo &quot;Could not find test: <span class="va">${test_only}</span>&quot;</span>
-<span id="cb1-25"><a href="#cb1-25"></a>    fi</span>
-<span id="cb1-26"><a href="#cb1-26"></a>fi</span>
-<span id="cb1-27"><a href="#cb1-27"></a></span>
-<span id="cb1-28"><a href="#cb1-28"></a>exit <span class="va">${EXIT_CODE}</span></span></code></pre></div>
+<div class="sourceCode" id="cb2" data-file="test/run.sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># taste environment</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="op">&lt;&lt;get-script-dir&gt;&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>&lt;&lt;define-exit-code<span class="op">&gt;&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a># function definitions</span>
+<span id="cb2-6"><a href="#cb2-6"></a>&lt;&lt;reporting<span class="op">&gt;&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>&lt;&lt;assertions<span class="op">&gt;&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>&lt;&lt;setup<span class="op">&gt;&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>&lt;&lt;teardown<span class="op">&gt;&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>&lt;&lt;run-test<span class="op">&gt;&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>&lt;&lt;show-help<span class="op">&gt;&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a></span>
+<span id="cb2-13"><a href="#cb2-13"></a># main script</span>
+<span id="cb2-14"><a href="#cb2-14"></a>&lt;&lt;parse-command-line<span class="op">&gt;&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a></span>
+<span id="cb2-16"><a href="#cb2-16"></a>if [ -z <span class="va">${test_only}</span> ]; then</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    for unit in &quot;<span class="va">${DIR}</span>&quot;/*.test; do</span>
+<span id="cb2-18"><a href="#cb2-18"></a>        run-test &quot;<span class="va">${unit}</span>&quot;</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    done</span>
+<span id="cb2-20"><a href="#cb2-20"></a>else</span>
+<span id="cb2-21"><a href="#cb2-21"></a>    if [ -f &quot;<span class="va">${test_only}</span>.test&quot; ]; then</span>
+<span id="cb2-22"><a href="#cb2-22"></a>        run-test &quot;<span class="va">${test_only}</span>&quot;</span>
+<span id="cb2-23"><a href="#cb2-23"></a>    else</span>
+<span id="cb2-24"><a href="#cb2-24"></a>        echo &quot;Could not find test: <span class="va">${test_only}</span>&quot;</span>
+<span id="cb2-25"><a href="#cb2-25"></a>    fi</span>
+<span id="cb2-26"><a href="#cb2-26"></a>fi</span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a>exit <span class="va">${EXIT_CODE}</span></span></code></pre></div>
 </div>
 <h1 id="reporting">Reporting</h1>
 <p>In the case of a test succeeding, print a message with a green <code>✓</code>. Argument <code>$1</code> describes the test.</p>
@@ -319,7 +382,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <h1 id="assertions">Assertions</h1>
 <div class="annotated-code">
-<p><span><em>«repl»=</em></span></p>
+<p><span><em>«repl»+</em></span></p>
 <div class="sourceCode" id="repl"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="repl-1"><a href="#repl-1"></a><span class="op">&lt;&lt;reporting&gt;&gt;</span></span>
 <span id="repl-2"><a href="#repl-2"></a>&lt;&lt;assertions<span class="op">&gt;&gt;</span></span></code></pre></div>
 </div>
@@ -369,8 +432,8 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <h2 id="array-equality">Array equality</h2>
 <p>Tests wether the arrays in arguments <code>$2</code> and <code>$3</code> are equal by string comparison, for example when listing expected files. Do make sure to use <code>sort</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">assert-arrayeq</span> <span class="st">&quot;Source contains expected files&quot;</span> \</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    <span class="st">&quot;</span><span class="va">$(</span><span class="ex">entangled</span> list <span class="kw">|</span> <span class="fu">sort</span><span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;factorial.scm hello.scm&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">assert-arrayeq</span> <span class="st">&quot;Source contains expected files&quot;</span> \</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="st">&quot;</span><span class="va">$(</span><span class="ex">entangled</span> list <span class="kw">|</span> <span class="fu">sort</span><span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;factorial.scm hello.scm&quot;</span></span></code></pre></div>
 <p>Implementation:</p>
 <div class="annotated-code">
 <p><span><em>«assertions»+</em></span></p>
@@ -381,7 +444,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="assertions-5"><a href="#assertions-5"></a>    <span class="kw">for</span> <span class="kw">((</span> i=0; i&lt;<span class="va">${n}</span>; i++<span class="kw">))</span>; <span class="kw">do</span></span>
 <span id="assertions-6"><a href="#assertions-6"></a>        <span class="kw">if</span><span class="bu"> [</span> <span class="ot">!</span> <span class="st">&quot;</span><span class="va">${a1[$i]}</span><span class="st">&quot;</span> <span class="ot">=</span> <span class="st">&quot;</span><span class="va">${a2[$i]}</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
 <span id="assertions-7"><a href="#assertions-7"></a>            <span class="ex">report-failure</span> assert-arrayeq <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
-<span id="assertions-8"><a href="#assertions-8"></a>            <span class="bu">break</span></span>
+<span id="assertions-8"><a href="#assertions-8"></a>            <span class="bu">return</span></span>
 <span id="assertions-9"><a href="#assertions-9"></a>        <span class="kw">fi</span></span>
 <span id="assertions-10"><a href="#assertions-10"></a>    <span class="kw">done</span></span>
 <span id="assertions-11"><a href="#assertions-11"></a>    <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>

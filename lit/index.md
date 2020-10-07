@@ -14,7 +14,33 @@ Testing in Haskell is usually done using `Hspec` together with `QuickCheck`. `Hs
 
 Python would be a nice hybrid. It has unit-testing libraries available, and all the power of a generic language. In the end however, what I want to do is, have a markdown file, emulate it being written to using `patch`, check if entangled shows the correct behaviour. The tests should look like a user typing in commands, working in the editor. I ended up coding this in Bash; a decision I may come to regret, but until that time, here's how it works.
 
+The idea is to have a set of tests each in a Bash script with the `.test` extension.
+
+``` {.bash file=test/example.test}
+assert-streq "running on Linux?" "$(uname -o)" "Linux"
+assert-not-exists "hello.txt does not exist" hello.txt
+
+cat > hello.txt <<EOF
+Hello, World!
+EOF
+
+assert-exists "hello.txt is created" hello.txt
+assert-streq "hello.txt content" "$(cat hello.txt)" "Hello, World!"
+```
+
+Running the script (here with `|| true` to prevent Jupyter from balking):
+
+``` {.bash #repl .eval}
+bash test/run.sh || true
+```
+
 # Command line interface in Bash
+The main script has the following interface.
+
+``` {.bash #repl .eval}
+bash test/run.sh -h
+```
+
 Command line parsing in Bash is actually quite nice.
 
 ``` {.bash #parse-command-line}
@@ -91,7 +117,7 @@ function show_help() {
     echo "    -v           verbose entangled"
     echo
     echo "Available units:"
-    for t in *.test; do
+    for t in ${DIR}/*.test; do
             echo "    - $(basename ${t} .test)"
     done
 }
@@ -106,7 +132,7 @@ function run-test() {
      if [ -z ${no_setup} ]; then
          setup
      fi
-     
+
      source "$(basename $1 .test).test"
 
      if [ -z ${no_setup} ]; then
@@ -276,7 +302,7 @@ function assert-arrayeq() {
     for (( i=0; i<${n}; i++)); do
         if [ ! "${a1[$i]}" = "${a2[$i]}" ]; then
             report-failure assert-arrayeq "$@"
-            break
+            return
         fi
     done
     report-success "$1"
