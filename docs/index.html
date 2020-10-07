@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Johan Hidding" />
+  <title>Test Bashing</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!-- Bootstrap 4.5.0 stylesheet -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/mods.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+<!-- <script data-main="scripts/main" src="js/require.js"></script> -->
+  <!-- Load React. -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+<!--  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script> -->
+
+
+</head>
+<body class="d-flex flex-column">
+
+<nav id="TOC" class="navbar navbar-dark bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a href="#" class="ml-5 mr-auto navbar-brand">Test Bashing<br><span style="font-size: smaller">Writing integration tests in Bash? 
+        by <i>Johan Hidding</i></span></a>
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+<ul>
+<li><a href="#command-line-interface-in-bash">Command line interface in Bash</a></li>
+<li><a href="#running-tests">Running tests</a></li>
+<li><a href="#the-main-script">The main script</a></li>
+<li><a href="#reporting">Reporting</a></li>
+<li><a href="#assertions">Assertions</a></li>
+</ul>
+</div>
+</nav>
+
+<!-- <nav class="navbar navbar-dark navbar-expand-md bg-dark mb-4">
+<p class="subtitle">Writing integration tests in Bash?</p>
+<p class="author">Johan Hidding</p>
+</nav>
+ -->
+
+<main role="main" class="flex-fill"><div class="container my-5">
+<p>Entangled is a command-line tool that is meant to be used from a shell like Bash. At some point I needed to test that the final executable is actually doing what it is supposed to do. This kind of testing is also known as integration testing. To do this testing I had several options:</p>
+<ul>
+<li>Use Haskell to run the commands and test everything</li>
+<li>Use Python since it is a bit more flexible</li>
+<li>Test directly from Bash</li>
+</ul>
+<p>Testing in Haskell is usually done using <code>Hspec</code> together with <code>QuickCheck</code>. <code>Hspec</code> manages the overall testing architechture, while <code>QuickCheck</code> lets you do property testing. This all works very well with functional code, but we’re in the realm of shell scripting here: setting up an environment, do mutations, check for sanity. Somehow the prospect of coding all this up in Haskell does not sound enticing.</p>
+<p>Python would be a nice hybrid. It has unit-testing libraries available, and all the power of a generic language. In the end however, what I want to do is, have a markdown file, emulate it being written to using <code>patch</code>, check if entangled shows the correct behaviour. The tests should look like a user typing in commands, working in the editor. I ended up coding this in Bash; a decision I may come to regret, but until that time, here’s how it works.</p>
+<h1 id="command-line-interface-in-bash">Command line interface in Bash</h1>
+<p>Command line parsing in Bash is actually quite nice.</p>
+<div class="annotated-code">
+<p><span><em>«parse-command-line»=</em></span></p>
+<div class="sourceCode" id="parse-command-line"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="parse-command-line-1"><a href="#parse-command-line-1"></a><span class="kw">while</span> <span class="bu">getopts</span> <span class="st">&quot;hdxcvu:&quot;</span> arg</span>
+<span id="parse-command-line-2"><a href="#parse-command-line-2"></a><span class="kw">do</span></span>
+<span id="parse-command-line-3"><a href="#parse-command-line-3"></a>    <span class="kw">case</span> <span class="va">${arg}</span><span class="kw"> in</span></span>
+<span id="parse-command-line-4"><a href="#parse-command-line-4"></a>    h<span class="kw">)</span>    <span class="ex">show_help</span></span>
+<span id="parse-command-line-5"><a href="#parse-command-line-5"></a>          <span class="bu">exit</span> 0</span>
+<span id="parse-command-line-6"><a href="#parse-command-line-6"></a>          <span class="kw">;;</span></span>
+<span id="parse-command-line-7"><a href="#parse-command-line-7"></a>    &lt;&lt;command-line-cases&gt;&gt;</span>
+<span id="parse-command-line-8"><a href="#parse-command-line-8"></a>    :<span class="kw">)</span>    <span class="bu">echo</span> <span class="st">&quot;Invalid option: </span><span class="va">${OPTARG}</span><span class="st"> requires an argument&quot;</span></span>
+<span id="parse-command-line-9"><a href="#parse-command-line-9"></a>          <span class="ex">show_help</span></span>
+<span id="parse-command-line-10"><a href="#parse-command-line-10"></a>          <span class="bu">exit</span> 2</span>
+<span id="parse-command-line-11"><a href="#parse-command-line-11"></a>          <span class="kw">;;</span></span>
+<span id="parse-command-line-12"><a href="#parse-command-line-12"></a>    \?<span class="kw">)</span>   <span class="ex">show_help</span></span>
+<span id="parse-command-line-13"><a href="#parse-command-line-13"></a>          <span class="bu">exit</span> 2</span>
+<span id="parse-command-line-14"><a href="#parse-command-line-14"></a>          <span class="kw">;;</span></span>
+<span id="parse-command-line-15"><a href="#parse-command-line-15"></a>    <span class="kw">esac</span></span>
+<span id="parse-command-line-16"><a href="#parse-command-line-16"></a><span class="kw">done</span></span></code></pre></div>
+</div>
+<p>This loops over command line arguments and looks for any argument matching the <code>"hdxcvu:"</code> description, that is, all these arguments are flags, except for <code>u</code> which expects an extra parameter. The <code>-h</code> flag runs the <code>show_help</code> function and exits. If an option is not recognized, we <code>show_help</code> and exit with error code.</p>
+<p>The <code>-d</code> flag runs unit tests in the current directory without first running <code>setup</code>.</p>
+<div class="annotated-code">
+<p><span><em>«command-line-cases»=</em></span></p>
+<div class="sourceCode" id="command-line-cases"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="command-line-cases-1"><a href="#command-line-cases-1"></a><span class="ex">d</span>)    <span class="va">no_setup=</span>1</span>
+<span id="command-line-cases-2"><a href="#command-line-cases-2"></a>      ;;</span></code></pre></div>
+</div>
+<p>The <code>-x</code> flag breaks off the script at the first test that fails.</p>
+<div class="annotated-code">
+<p><span><em>«command-line-cases»+</em></span></p>
+<div class="sourceCode" id="command-line-cases"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="command-line-cases-1"><a href="#command-line-cases-1"></a><span class="ex">x</span>)    <span class="va">break_on_fail=</span>1</span>
+<span id="command-line-cases-2"><a href="#command-line-cases-2"></a>      ;;</span></code></pre></div>
+</div>
+<p>The <code>-u</code> parameter singles out a test to run.</p>
+<div class="annotated-code">
+<p><span><em>«command-line-cases»+</em></span></p>
+<div class="sourceCode" id="command-line-cases"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="command-line-cases-1"><a href="#command-line-cases-1"></a><span class="ex">u</span>)    <span class="va">test_only=$(</span><span class="fu">basename</span> <span class="va">${OPTARG}</span> .test<span class="va">)</span></span>
+<span id="command-line-cases-2"><a href="#command-line-cases-2"></a>      ;;</span></code></pre></div>
+</div>
+<p>The <code>-v</code> flag runs verbose.</p>
+<div class="annotated-code">
+<p><span><em>«command-line-cases»+</em></span></p>
+<div class="sourceCode" id="command-line-cases"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="command-line-cases-1"><a href="#command-line-cases-1"></a><span class="ex">v</span>)    <span class="va">verbose=</span>1</span>
+<span id="command-line-cases-2"><a href="#command-line-cases-2"></a>      ;;</span></code></pre></div>
+</div>
+<p>The <code>-c</code> flag cleans current directory (after tests have been run with <code>-d</code>), by running <code>git checkout</code>.</p>
+<div class="annotated-code">
+<p><span><em>«command-line-cases»+</em></span></p>
+<div class="sourceCode" id="command-line-cases"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="command-line-cases-1"><a href="#command-line-cases-1"></a><span class="ex">c</span>)    <span class="fu">rm</span> -fv <span class="st">&quot;</span><span class="va">${DIR}</span><span class="st">&quot;</span>/entangled.db</span>
+<span id="command-line-cases-2"><a href="#command-line-cases-2"></a>      <span class="fu">rm</span> -fv <span class="st">&quot;</span><span class="va">${DIR}</span><span class="st">&quot;</span>/*.scm</span>
+<span id="command-line-cases-3"><a href="#command-line-cases-3"></a>      <span class="fu">git</span> checkout <span class="st">&quot;</span><span class="va">${DIR}</span><span class="st">&quot;</span>/*.md</span>
+<span id="command-line-cases-4"><a href="#command-line-cases-4"></a>      <span class="bu">exit</span> 0</span>
+<span id="command-line-cases-5"><a href="#command-line-cases-5"></a>      ;;</span></code></pre></div>
+</div>
+<h2 id="help-message">Help message</h2>
+<div class="annotated-code">
+<p><span><em>«show-help»=</em></span></p>
+<div class="sourceCode" id="show-help"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="show-help-1"><a href="#show-help-1"></a><span class="kw">function</span><span class="fu"> show_help()</span> <span class="kw">{</span></span>
+<span id="show-help-2"><a href="#show-help-2"></a>    <span class="bu">echo</span> <span class="st">&quot;usage: </span><span class="va">$0</span><span class="st"> [args]&quot;</span></span>
+<span id="show-help-3"><a href="#show-help-3"></a>    <span class="bu">echo</span></span>
+<span id="show-help-4"><a href="#show-help-4"></a>    <span class="bu">echo</span> <span class="st">&quot;where [args] can be one of:&quot;</span></span>
+<span id="show-help-5"><a href="#show-help-5"></a>    <span class="bu">echo</span> <span class="st">&quot;    -h           help: show this help&quot;</span></span>
+<span id="show-help-6"><a href="#show-help-6"></a>    <span class="bu">echo</span> <span class="st">&quot;    -d           debug: run here instead of /tmp&quot;</span></span>
+<span id="show-help-7"><a href="#show-help-7"></a>    <span class="bu">echo</span> <span class="st">&quot;    -x           break on first failure&quot;</span></span>
+<span id="show-help-8"><a href="#show-help-8"></a>    <span class="bu">echo</span> <span class="st">&quot;    -u &lt;unit&gt;    only run unit&quot;</span></span>
+<span id="show-help-9"><a href="#show-help-9"></a>    <span class="bu">echo</span> <span class="st">&quot;    -c           clean after local run (with -d)&quot;</span></span>
+<span id="show-help-10"><a href="#show-help-10"></a>    <span class="bu">echo</span> <span class="st">&quot;    -v           verbose entangled&quot;</span></span>
+<span id="show-help-11"><a href="#show-help-11"></a>    <span class="bu">echo</span></span>
+<span id="show-help-12"><a href="#show-help-12"></a>    <span class="bu">echo</span> <span class="st">&quot;Available units:&quot;</span></span>
+<span id="show-help-13"><a href="#show-help-13"></a>    <span class="kw">for</span> <span class="ex">t</span> in *.test<span class="kw">;</span> <span class="kw">do</span></span>
+<span id="show-help-14"><a href="#show-help-14"></a>            <span class="bu">echo</span> <span class="st">&quot;    - </span><span class="va">$(</span><span class="fu">basename</span> <span class="va">${t}</span> .test<span class="va">)</span><span class="st">&quot;</span></span>
+<span id="show-help-15"><a href="#show-help-15"></a>    <span class="kw">done</span></span>
+<span id="show-help-16"><a href="#show-help-16"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<h1 id="running-tests">Running tests</h1>
+<p>Each test is located in a file with the <code>.test</code> extension. These are Bash files, but since they do not function outside the context of this testing framework, I decided to give them a different extension. If you put <code># vim:ft=bash</code> as the last line of the file, Vim will recognize it as a Bash script. The <code>run-test()</code> function takes as an argument either the name of the test or the corresponding filename with the <code>.test</code> extension. First <code>setup()</code> is called, then the test is sourced, after wich <code>teardown()</code> is called.</p>
+<div class="annotated-code">
+<p><span><em>«run-test»=</em></span></p>
+<div class="sourceCode" id="run-test"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="run-test-1"><a href="#run-test-1"></a><span class="kw">function</span><span class="fu"> run-test()</span> <span class="kw">{</span></span>
+<span id="run-test-2"><a href="#run-test-2"></a>     <span class="bu">echo</span> -e <span class="st">&quot;\033[33m ~~~\033[m \033[1m</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$1</span> .test<span class="va">)</span><span class="st">\033[m \033[33m~~~\033[m&quot;</span></span>
+<span id="run-test-3"><a href="#run-test-3"></a>     <span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="va">${no_setup}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="run-test-4"><a href="#run-test-4"></a>         <span class="ex">setup</span></span>
+<span id="run-test-5"><a href="#run-test-5"></a>     <span class="kw">fi</span></span>
+<span id="run-test-6"><a href="#run-test-6"></a>     </span>
+<span id="run-test-7"><a href="#run-test-7"></a>     <span class="bu">source</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$1</span> .test<span class="va">)</span><span class="st">.test&quot;</span></span>
+<span id="run-test-8"><a href="#run-test-8"></a></span>
+<span id="run-test-9"><a href="#run-test-9"></a>     <span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="va">${no_setup}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="run-test-10"><a href="#run-test-10"></a>         <span class="ex">teardown</span></span>
+<span id="run-test-11"><a href="#run-test-11"></a>     <span class="kw">fi</span></span>
+<span id="run-test-12"><a href="#run-test-12"></a>     <span class="bu">echo</span></span>
+<span id="run-test-13"><a href="#run-test-13"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<h2 id="setup-and-teardown">Setup and Teardown</h2>
+<p>Each test is run in an isolated environment created in a temporary directory. We set this up using the <code>setup()</code> function.</p>
+<div class="annotated-code">
+<p><span><em>«setup»=</em></span></p>
+<div class="sourceCode" id="setup"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="setup-1"><a href="#setup-1"></a><span class="kw">function</span><span class="fu"> setup()</span> <span class="kw">{</span></span>
+<span id="setup-2"><a href="#setup-2"></a>    <span class="op">&lt;&lt;create-temp-dir&gt;&gt;</span></span>
+<span id="setup-3"><a href="#setup-3"></a>    &lt;&lt;copy-relevant-files<span class="op">&gt;&gt;</span></span>
+<span id="setup-4"><a href="#setup-4"></a>    &lt;&lt;enter-temp-dir<span class="op">&gt;&gt;</span></span>
+<span id="setup-5"><a href="#setup-5"></a>}</span></code></pre></div>
+</div>
+<p>To create a temporary directory, UNIX has the <code>mktemp</code> command. This command may differ slightly between Linux and Mac though, this hack solves that issue.</p>
+<div class="annotated-code">
+<p><span><em>«create-temp-dir»=</em></span></p>
+<div class="sourceCode" id="create-temp-dir"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="create-temp-dir-1"><a href="#create-temp-dir-1"></a><span class="va">TMPDIR=$(</span><span class="fu">mktemp</span> -d <span class="op">2&gt;</span>/dev/null <span class="kw">||</span> <span class="fu">mktemp</span> -d -t <span class="st">&#39;entangled-test&#39;</span><span class="va">)</span></span></code></pre></div>
+</div>
+<p>Then we populate the temporary directory with all the files needed to run the test. Here we just copy everything from the current directory.</p>
+<div class="annotated-code">
+<p><span><em>«copy-relevant-files»=</em></span></p>
+<div class="sourceCode" id="copy-relevant-files"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="copy-relevant-files-1"><a href="#copy-relevant-files-1"></a><span class="bu">echo</span> <span class="st">&quot;Setting up in </span><span class="va">${TMPDIR}</span><span class="st"> ...&quot;</span></span>
+<span id="copy-relevant-files-2"><a href="#copy-relevant-files-2"></a><span class="fu">cp</span> <span class="st">&quot;</span><span class="va">${DIR}</span><span class="st">&quot;</span>/* <span class="st">&quot;</span><span class="va">${TMPDIR}</span><span class="st">&quot;</span></span></code></pre></div>
+</div>
+<p>To enter the directory we use <code>pushd</code>.</p>
+<div class="annotated-code">
+<p><span><em>«enter-temp-dir»=</em></span></p>
+<div class="sourceCode" id="enter-temp-dir"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="enter-temp-dir-1"><a href="#enter-temp-dir-1"></a><span class="bu">pushd</span> <span class="st">&quot;</span><span class="va">${TMPDIR}</span><span class="st">&quot;</span> <span class="op">&gt;</span> /dev/null</span></code></pre></div>
+</div>
+<p>This allows us to get back to current working directory by running <code>popd</code>. The <code>teardown()</code> function does exactly that, and removes the temporary directory.</p>
+<div class="annotated-code">
+<p><span><em>«teardown»=</em></span></p>
+<div class="sourceCode" id="teardown"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="teardown-1"><a href="#teardown-1"></a><span class="kw">function</span><span class="fu"> teardown()</span> <span class="kw">{</span></span>
+<span id="teardown-2"><a href="#teardown-2"></a>    <span class="bu">echo</span> <span class="st">&quot;Cleaning up ...&quot;</span></span>
+<span id="teardown-3"><a href="#teardown-3"></a>    <span class="bu">popd</span> <span class="op">&gt;</span> /dev/null</span>
+<span id="teardown-4"><a href="#teardown-4"></a>    <span class="fu">rm</span> -rf <span class="st">&quot;</span><span class="va">${TMPDIR}</span><span class="st">&quot;</span></span>
+<span id="teardown-5"><a href="#teardown-5"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<h1 id="the-main-script">The main script</h1>
+<p>The main script has to know where it is located. The following one-liner puts the name of the directory containing the script that is being run in <code>${DIR}</code>. There are other ways, but this has the advantage of also working on MacOS.</p>
+<div class="annotated-code">
+<p><span><em>«get-script-dir»=</em></span></p>
+<div class="sourceCode" id="get-script-dir"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="get-script-dir-1"><a href="#get-script-dir-1"></a><span class="va">DIR=</span><span class="st">&quot;</span><span class="va">$(</span> <span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$(</span> <span class="fu">dirname</span> <span class="st">&quot;</span><span class="va">${BASH_SOURCE[0]}</span><span class="st">&quot;</span> <span class="va">)</span><span class="st">&quot;</span> <span class="op">&gt;</span>/dev/null <span class="op">2&gt;&amp;1</span> <span class="kw">&amp;&amp;</span> <span class="bu">pwd</span> <span class="va">)</span><span class="st">&quot;</span></span></code></pre></div>
+</div>
+<p>We are running all test by default. If any test fails, <code>EXIT_CODE</code> has to be set to <code>1</code>.</p>
+<div class="annotated-code">
+<p><span><em>«define-exit-code»=</em></span></p>
+<div class="sourceCode" id="define-exit-code"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="define-exit-code-1"><a href="#define-exit-code-1"></a><span class="va">EXIT_CODE=</span>0</span></code></pre></div>
+</div>
+<div class="annotated-code">
+<p><span><em>«test/run.sh»=</em></span></p>
+<div class="sourceCode" id="cb1" data-file="test/run.sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># taste environment</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="op">&lt;&lt;get-script-dir&gt;&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>&lt;&lt;define-exit-code<span class="op">&gt;&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a># function definitions</span>
+<span id="cb1-6"><a href="#cb1-6"></a>&lt;&lt;reporting<span class="op">&gt;&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>&lt;&lt;assertions<span class="op">&gt;&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>&lt;&lt;setup<span class="op">&gt;&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>&lt;&lt;teardown<span class="op">&gt;&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>&lt;&lt;run-test<span class="op">&gt;&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>&lt;&lt;show-help<span class="op">&gt;&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a># main script</span>
+<span id="cb1-14"><a href="#cb1-14"></a>&lt;&lt;parse-command-line<span class="op">&gt;&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a></span>
+<span id="cb1-16"><a href="#cb1-16"></a>if [ -z <span class="va">${test_only}</span> ]; then</span>
+<span id="cb1-17"><a href="#cb1-17"></a>    for unit in &quot;<span class="va">${DIR}</span>&quot;/*.test; do</span>
+<span id="cb1-18"><a href="#cb1-18"></a>        run-test &quot;<span class="va">${unit}</span>&quot;</span>
+<span id="cb1-19"><a href="#cb1-19"></a>    done</span>
+<span id="cb1-20"><a href="#cb1-20"></a>else</span>
+<span id="cb1-21"><a href="#cb1-21"></a>    if [ -f &quot;<span class="va">${test_only}</span>.test&quot; ]; then</span>
+<span id="cb1-22"><a href="#cb1-22"></a>        run-test &quot;<span class="va">${test_only}</span>&quot;</span>
+<span id="cb1-23"><a href="#cb1-23"></a>    else</span>
+<span id="cb1-24"><a href="#cb1-24"></a>        echo &quot;Could not find test: <span class="va">${test_only}</span>&quot;</span>
+<span id="cb1-25"><a href="#cb1-25"></a>    fi</span>
+<span id="cb1-26"><a href="#cb1-26"></a>fi</span>
+<span id="cb1-27"><a href="#cb1-27"></a></span>
+<span id="cb1-28"><a href="#cb1-28"></a>exit <span class="va">${EXIT_CODE}</span></span></code></pre></div>
+</div>
+<h1 id="reporting">Reporting</h1>
+<p>In the case of a test succeeding, print a message with a green <code>✓</code>. Argument <code>$1</code> describes the test.</p>
+<div class="annotated-code">
+<p><span><em>«reporting»=</em></span></p>
+<div class="sourceCode" id="reporting"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="reporting-1"><a href="#reporting-1"></a><span class="kw">function</span><span class="fu"> report-success()</span> <span class="kw">{</span></span>
+<span id="reporting-2"><a href="#reporting-2"></a>    <span class="bu">echo</span> -e <span class="st">&quot;\033[32m✓\033[m  </span><span class="va">$1</span><span class="st">&quot;</span></span>
+<span id="reporting-3"><a href="#reporting-3"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<p>If a test fails, we print a message explaining the failure with a red <code>✗</code>. Argument <code>$1</code> is the name of the assertion, argument <code>$2</code> the description of the test, the rest are arguments to the failed assertion.</p>
+<div class="annotated-code">
+<p><span><em>«reporting»+</em></span></p>
+<div class="sourceCode" id="reporting"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="reporting-1"><a href="#reporting-1"></a><span class="kw">function</span><span class="fu"> report-failure()</span> <span class="kw">{</span></span>
+<span id="reporting-2"><a href="#reporting-2"></a>    <span class="bu">echo</span> -e <span class="st">&quot;\033[31m✗\033[m  </span><span class="va">$2</span><span class="st">, \033[1m</span><span class="va">$1</span><span class="st">\033[m args:&quot;</span></span>
+<span id="reporting-3"><a href="#reporting-3"></a>    <span class="bu">shift</span> <span class="kw">;</span> <span class="bu">shift</span></span>
+<span id="reporting-4"><a href="#reporting-4"></a>    <span class="kw">for</span> <span class="ex">var</span> in <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span><span class="kw">;</span> <span class="kw">do</span></span>
+<span id="reporting-5"><a href="#reporting-5"></a>        <span class="bu">echo</span> <span class="st">&quot;    - </span><span class="dt">\&quot;</span><span class="va">${var}</span><span class="dt">\&quot;</span><span class="st">&quot;</span></span>
+<span id="reporting-6"><a href="#reporting-6"></a>    <span class="kw">done</span></span>
+<span id="reporting-7"><a href="#reporting-7"></a></span>
+<span id="reporting-8"><a href="#reporting-8"></a>    <span class="va">EXIT_CODE=</span>1</span>
+<span id="reporting-9"><a href="#reporting-9"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="ot">!</span> <span class="ot">-z</span> <span class="va">${break_on_fail}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="reporting-10"><a href="#reporting-10"></a>        <span class="bu">exit</span> <span class="va">${EXIT_CODE}</span></span>
+<span id="reporting-11"><a href="#reporting-11"></a>    <span class="kw">fi</span></span>
+<span id="reporting-12"><a href="#reporting-12"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<h1 id="assertions">Assertions</h1>
+<p>The first argument of an assertion is always the human-readable description. The following assertions are defined.</p>
+<h2 id="string-equality">String equality</h2>
+<p>Test if two strings are equal.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">assert-streq</span> <span class="st">&quot;6 * 7 == 42&quot;</span> <span class="va">$(</span><span class="bu">echo</span> <span class="st">&quot;6 * 7&quot;</span> <span class="kw">|</span> <span class="fu">bc</span><span class="va">)</span> <span class="st">&quot;42&quot;</span></span></code></pre></div>
+<p>Implementation:</p>
+<div class="annotated-code">
+<p><span><em>«assertions»=</em></span></p>
+<div class="sourceCode" id="assertions"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="assertions-1"><a href="#assertions-1"></a><span class="kw">function</span><span class="fu"> assert-streq()</span> <span class="kw">{</span></span>
+<span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span> <span class="ot">=</span> <span class="st">&quot;</span><span class="va">$3</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
+<span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> assert-streq <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
+<span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<h2 id="array-equality">Array equality</h2>
+<p>Tests wether the arrays in arguments <code>$2</code> and <code>$3</code> are equal by string comparison, for example when listing expected files. Do make sure to use <code>sort</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">assert-arrayeq</span> <span class="st">&quot;Source contains expected files&quot;</span> \</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="st">&quot;</span><span class="va">$(</span><span class="ex">entangled</span> list <span class="kw">|</span> <span class="fu">sort</span><span class="va">)</span><span class="st">&quot;</span> <span class="st">&quot;factorial.scm hello.scm&quot;</span></span></code></pre></div>
+<p>Implementation:</p>
+<div class="annotated-code">
+<p><span><em>«assertions»+</em></span></p>
+<div class="sourceCode" id="assertions"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="assertions-1"><a href="#assertions-1"></a><span class="kw">function</span><span class="fu"> assert-arrayeq()</span> <span class="kw">{</span></span>
+<span id="assertions-2"><a href="#assertions-2"></a>    <span class="bu">local</span> <span class="va">a1=($2)</span></span>
+<span id="assertions-3"><a href="#assertions-3"></a>    <span class="bu">local</span> <span class="va">a2=($3)</span></span>
+<span id="assertions-4"><a href="#assertions-4"></a>    <span class="bu">local</span> <span class="va">n=${#a1[@]}</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>    <span class="kw">for</span> <span class="kw">((</span> i=0; i&lt;<span class="va">${n}</span>; i++<span class="kw">))</span>; <span class="kw">do</span></span>
+<span id="assertions-6"><a href="#assertions-6"></a>        <span class="kw">if</span><span class="bu"> [</span> <span class="ot">!</span> <span class="st">&quot;</span><span class="va">${a1[$i]}</span><span class="st">&quot;</span> <span class="ot">=</span> <span class="st">&quot;</span><span class="va">${a2[$i]}</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="assertions-7"><a href="#assertions-7"></a>            <span class="ex">report-failure</span> assert-arrayeq <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-8"><a href="#assertions-8"></a>            <span class="bu">break</span></span>
+<span id="assertions-9"><a href="#assertions-9"></a>        <span class="kw">fi</span></span>
+<span id="assertions-10"><a href="#assertions-10"></a>    <span class="kw">done</span></span>
+<span id="assertions-11"><a href="#assertions-11"></a>    <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
+<span id="assertions-12"><a href="#assertions-12"></a><span class="kw">}</span>        </span></code></pre></div>
+</div>
+<h2 id="file-existence">File existence</h2>
+<p>Tests wether a given file exists.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">touch</span> hello.txt</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="ex">assert-exists</span> <span class="st">&quot;hello.txt was created&quot;</span> hello.txt</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">rm</span> hello.txt</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="ex">assert-not-exists</span> <span class="st">&quot;hello.txt was destroyed&quot;</span> hello.txt</span></code></pre></div>
+<p>Implementation:</p>
+<div class="annotated-code">
+<p><span><em>«assertions»+</em></span></p>
+<div class="sourceCode" id="assertions"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="assertions-1"><a href="#assertions-1"></a><span class="kw">function</span><span class="fu"> assert-exists()</span> <span class="kw">{</span></span>
+<span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="ot">-e</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
+<span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
+<span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<p>The following succeeds if the given filename does not exist.</p>
+<div class="annotated-code">
+<p><span><em>«assertions»+</em></span></p>
+<div class="sourceCode" id="assertions"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="assertions-1"><a href="#assertions-1"></a><span class="kw">function</span><span class="fu"> assert-not-exists()</span> <span class="kw">{</span></span>
+<span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="ot">!</span> <span class="ot">-e</span> <span class="st">&quot;</span><span class="va">$2</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
+<span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
+<span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<h2 id="command-success">Command success</h2>
+<p>To test wether the previous command returned success by calling these functions with <code>$?</code> argument.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">which</span> entangled</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="ex">assert-return-success</span> <span class="st">&quot;Entangled executable found&quot;</span> <span class="va">$?</span></span></code></pre></div>
+<p>The <code>assert-return-fail</code> function succeeds if the command failed (exit code other than 0).</p>
+<div class="annotated-code">
+<p><span><em>«assertions»+</em></span></p>
+<div class="sourceCode" id="assertions"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="assertions-1"><a href="#assertions-1"></a><span class="kw">function</span><span class="fu"> assert-return-fail()</span> <span class="kw">{</span></span>
+<span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="ot">!</span> <span class="va">$2</span> <span class="ot">-eq</span> 0<span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span>        </span>
+<span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
+<span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+<p>The <code>assert-return-success</code> function succeeds if the command return success (exit code 0).</p>
+<div class="annotated-code">
+<p><span><em>«assertions»+</em></span></p>
+<div class="sourceCode" id="assertions"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="assertions-1"><a href="#assertions-1"></a><span class="kw">function</span><span class="fu"> assert-return-success()</span> <span class="kw">{</span></span>
+<span id="assertions-2"><a href="#assertions-2"></a>    <span class="kw">if</span><span class="bu"> [</span> <span class="va">$2</span> <span class="ot">-eq</span> 0<span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="assertions-3"><a href="#assertions-3"></a>        <span class="ex">report-success</span> <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span>        </span>
+<span id="assertions-4"><a href="#assertions-4"></a>    <span class="kw">else</span></span>
+<span id="assertions-5"><a href="#assertions-5"></a>        <span class="ex">report-failure</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span>
+<span id="assertions-6"><a href="#assertions-6"></a>    <span class="kw">fi</span></span>
+<span id="assertions-7"><a href="#assertions-7"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+</div></main>
+
+
+
+<!-- Bootstrap 4.5.0 -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<!-- Mathjax -->
+</body>
+</html>
